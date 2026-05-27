@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  selenium-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - MAVEN_OPTS=-Xmx512m
+      - DISPLAY=:99
+    volumes:
+      - ./logs:/app/logs
+      - ./target:/app/target
+    ports:
+      - "5900:5900"
+    working_dir: /app
+    command: >
+      sh -c "
+      Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+      sleep 3 &&
+      mvn test -X
+      "
